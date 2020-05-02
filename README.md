@@ -79,8 +79,8 @@ function pumpC(data) {
 }
 
 pump(source, concat(pumpA), (err) => {
-  pump(source, concat(pumpA), (err) => {
-    pump(source, concat(pumpA), (err) => {
+  pump(source, concat(pumpB), (err) => {
+    pump(source, concat(pumpC), (err) => {
       console.log('all pipes finished', err);
     });
   });
@@ -116,8 +116,8 @@ function pumpC(data) {
 }
 
 magicpump(source, concat(pumpA), (err) => {
-  magicpump(source, concat(pumpA), (err) => {
-    magicpump(source, concat(pumpA), (err) => {
+  magicpump(source, concat(pumpB), (err) => {
+    magicpump(source, concat(pumpC), (err) => {
       console.log('all pipes finished', err);
     });
   });
