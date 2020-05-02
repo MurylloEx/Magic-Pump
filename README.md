@@ -66,25 +66,25 @@ Let's have a look on the following source code:
 ```javascript
 var source = fs.createReadStream('/dev/random');
 
-function finished(err) {
-  console.log('pipe finished', err);
-}
-
 function pumpA(data) {
   console.log('the data of pump A is... ', data.toString('utf8'));
-  pump(source, concat(pumpB), finished);
 }
 
 function pumpB(data) {
   console.log('the data of pump B is... ', data.toString('utf8'));
-  pump(source, concat(pumpC), finished);
 }
 
 function pumpC(data) {
   console.log('the data of pump C is... ', data.toString('utf8'));
 }
 
-pump(source, concat(pumpA), finished);
+pump(source, concat(pumpA), (err) => {
+  pump(source, concat(pumpA), (err) => {
+    pump(source, concat(pumpA), (err) => {
+      console.log('all pipes finished', err);
+    });
+  });
+});
 ```
 
 If you try execute that, should get an error like this:
@@ -118,7 +118,7 @@ function pumpC(data) {
 magicpump(source, concat(pumpA), (err) => {
   magicpump(source, concat(pumpA), (err) => {
     magicpump(source, concat(pumpA), (err) => {
-      console.log('pipe finished', err);
+      console.log('all pipes finished', err);
     });
   });
 });
@@ -130,5 +130,5 @@ And all is done! The magic pump will do the work and clone those buffers interna
 the data of pump A is...  [content of source stream here]
 the data of pump B is...  [content of source stream here]
 the data of pump C is...  [content of source stream here]
-pipe finished undefined
+pipe finished
 ```
